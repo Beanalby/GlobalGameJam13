@@ -4,13 +4,16 @@ using System.Collections.Generic;
 public class TypeMaster : MonoBehaviour {
 
     public GameObject targetTemplate;
+    public bool isRunning = true;
     public int numTargets;
 
-    private string[] wordList = { "beat", "blood", "flow", "flutter", "gush", "heart", "live", "pound", "pulse", "spout", "spurt", "surge", "throb", "thump"};
+    private PulseController pc;
     private List<TypeTarget> targets;
     private float targetOffset;
+    private string[] wordList = { "beat", "blood", "flow", "flutter", "gush", "heart", "live", "pound", "pulse", "spout", "spurt", "surge", "throb", "thump"};
 
 	void Start () {
+        pc = GameObject.Find("PulseController").GetComponent<PulseController>();
         targetOffset = targetTemplate.GetComponent<TextMesh>().fontSize / 10;
         targets = new List<TypeTarget>(numTargets);
         for (int i = 0; i < numTargets; i++)
@@ -22,8 +25,11 @@ public class TypeMaster : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        HandleInput(Input.inputString);
-        HandleFinished();
+        if (isRunning)
+        {
+            HandleInput(Input.inputString);
+            HandleFinished();
+        }
     }
 
     private void HandleFinished()
@@ -32,10 +38,10 @@ public class TypeMaster : MonoBehaviour {
         {
             if (target.IsFinished)
             {
-                Debug.Log(target.text + " Finished!");
                 TypeTarget oldTarget = target;
                 targets[oldTarget.index] = CreateTarget(oldTarget.index);
                 Destroy(oldTarget.gameObject);
+                pc.DidWord();
             }
         }
     }
@@ -73,7 +79,9 @@ public class TypeMaster : MonoBehaviour {
             }
         }
         if (input != "")
-            Debug.Log("result=" + result);
+        {
+            // TODO make sound
+        }
 	}
 
     public bool IsTextUsed(string text)
