@@ -6,26 +6,92 @@ public class TypeMaster : MonoBehaviour {
     public GameObject targetTemplate;
     public int numTargets;
 
-    private string[] wordList = { "beat", "blood", "pulse", "live" };
+    private string[] wordList = { "beat", "blood", "flow", "flutter", "gush", "heart", "live", "pound", "pulse", "spout", "spurt", "surge", "throb", "thump"};
     private List<TypeTarget> targets;
     private float targetOffset;
 
 	void Start () {
         targetOffset = targetTemplate.GetComponent<TextMesh>().fontSize / 10;
+        targets = new List<TypeTarget>(numTargets);
         for (int i = 0; i < numTargets; i++)
         {
-            TypeTarget tt = ((GameObject)Instantiate(targetTemplate)).GetComponent<TypeTarget>();
-            tt.transform.parent = transform;
-            tt.transform.localPosition = new Vector3(0, -(i * targetOffset), 0);
-            tt.text = wordList[i];
+            targets.Add(CreateTarget(i));
         }
 	}
 
     // Update is called once per frame
     void Update()
     {
+        HandleInput(Input.inputString);
+        HandleFinished();
+    }
+
+    private void HandleFinished()
+    {
+        foreach (TypeTarget target in targets)
+        {
+            if (target.IsFinished)
+            {
+                Debug.Log(target.text + " Finished!");
+                TypeTarget oldTarget = target;
+                targets[oldTarget.index] = CreateTarget(oldTarget.index);
+                Destroy(oldTarget.gameObject);
+            }
+        }
+    }
+    private TypeTarget CreateTarget(int index)
+    {
+        TypeTarget tt = ((GameObject)Instantiate(targetTemplate)).GetComponent<TypeTarget>();
+        tt.index = index;
+        tt.transform.parent = transform;
+        tt.transform.localPosition = new Vector3(0, -(index * targetOffset), 0);
+        tt.text = GetNewText();
+        return tt;
+    }
+    private void HandleInput(string input)
+    {
+        InputResult result = InputResult.None;
+        foreach (char c in input)
+        {
+            foreach (TypeTarget target in targets)
+            {
+                switch (target.HandleInput(c))
+                {
+                    case InputResult.Match:
+                        result = InputResult.Match;
+                        break;
+                    case InputResult.Advance:
+                        if (result != InputResult.Match)
+                            result = InputResult.Advance;
+                        break;
+                    case InputResult.Reset:
+                        // reset only overrides none
+                        if (result == InputResult.None)
+                            result = InputResult.Reset;
+                        break;
+                }
+            }
+        }
+        if (input != "")
+            Debug.Log("result=" + result);
 	}
 
+    public bool IsTextUsed(string text)
+    {
+        foreach(TypeTarget target in targets)
+            if(target.text == text)
+                return true;
+        return false;
+    }
+    public string GetNewText()
+    {
+        string text;
+        do
+        {
+            text = wordList[Random.Range(0, wordList.Length-1)];
+        } while(IsTextUsed(text));
+        return text;
+    }
     public void OnDrawGizmos()
     {
         targetOffset = targetTemplate.GetComponent<TextMesh>().fontSize / 10;

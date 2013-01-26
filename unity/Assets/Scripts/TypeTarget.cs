@@ -2,19 +2,24 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-public enum InputResult { None, Advance, Reset };
+public enum InputResult { Match, Advance, Reset, None };
 
 [RequireComponent(typeof(TextMesh))]
 [RequireComponent(typeof(MeshRenderer))]
 public class TypeTarget : MonoBehaviour {
 
     public string text = "TypeMe";
+    public int index;
     public Color matchColor = Color.yellow;
 
     private string matchHex;
     private int currentPos = 0;
     private TextMesh tm;
 
+    public bool IsFinished
+    {
+        get { return currentPos == text.Length; }
+    }
 	// Use this for initialization
 	void Start()
     {
@@ -23,35 +28,37 @@ public class TypeTarget : MonoBehaviour {
         UpdateTextMesh();
 	}
 	
-	// Update is called once per frame
-	void Update()
+    public InputResult HandleInput(char c)
     {
-        foreach (char c in Input.inputString)
-        {
-            HandleInput(c);
-        }
-	}
-
-    private void HandleInput(char c)
-    {
-        if (currentPos == text.Length)
-        {
-            return;
-        }
+        InputResult ret;
         if (char.ToLower(text[currentPos]) == char.ToLower(c))
         {
             currentPos++;
             if (currentPos == text.Length)
             {
-                Debug.Log("MATCHED!");
+                ret = InputResult.Match;
+            }
+            else
+            {
+                ret = InputResult.Advance;
             }
         }
-        else
+        else /* doesn't match */
         {
-            currentPos = 0;
+            if (currentPos != 0)
+            {
+                currentPos = 0;
+                ret = InputResult.Reset;
+            }
+            else
+            {
+                ret = InputResult.None;
+            }
         }
         UpdateTextMesh();
+        return ret;
     }
+
     private void UpdateTextMesh()
     {
         string newStr;
