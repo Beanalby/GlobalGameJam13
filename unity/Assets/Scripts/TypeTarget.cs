@@ -2,9 +2,13 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-public class TypeMe : MonoBehaviour {
+public enum InputResult { None, Advance, Reset };
 
-    public string target = "";
+[RequireComponent(typeof(TextMesh))]
+[RequireComponent(typeof(MeshRenderer))]
+public class TypeTarget : MonoBehaviour {
+
+    public string text = "TypeMe";
     public Color matchColor = Color.yellow;
 
     private string matchHex;
@@ -30,23 +34,20 @@ public class TypeMe : MonoBehaviour {
 
     private void HandleInput(char c)
     {
-        if (currentPos == target.Length)
+        if (currentPos == text.Length)
         {
-            Debug.Log("Already done");
             return;
         }
-        if (target[currentPos] == char.ToLower(c))
+        if (char.ToLower(text[currentPos]) == char.ToLower(c))
         {
-            Debug.Log("matched, advancing");
             currentPos++;
-            if (currentPos == target.Length)
+            if (currentPos == text.Length)
             {
                 Debug.Log("MATCHED!");
             }
         }
         else
         {
-            Debug.Log("Input " + c + " didn't match " + target[currentPos] + ", resetting");
             currentPos = 0;
         }
         UpdateTextMesh();
@@ -56,15 +57,15 @@ public class TypeMe : MonoBehaviour {
         string newStr;
         if (currentPos == 0)
         {
-            Debug.Log("Updating as blank");
-            newStr = target;
+            newStr = text;
         }
         else
         {
-            Debug.Log("Creating with color");
-            newStr = "<color=\"#" + matchHex + "\">" + target.Substring(0, currentPos) + "</color>" +target.Substring(currentPos);
+            newStr = "<color=\"#" + matchHex + "\">" + text.Substring(0, currentPos) + "</color>" +text.Substring(currentPos);
         }
-        Debug.Log("Updating to [" + newStr + "]");
         tm.text = newStr;
+    }
+    void OnGUI()
+    {
     }
 }
