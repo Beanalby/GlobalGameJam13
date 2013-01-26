@@ -1,0 +1,5 @@
+unity/*
+!unity/Assets/
+!unity/ProjectSettings/
+!.gitignore
+
