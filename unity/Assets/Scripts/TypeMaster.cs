@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(AudioSource))]
 public class TypeMaster : MonoBehaviour {
 
     public GameObject targetTemplate;
@@ -9,14 +8,12 @@ public class TypeMaster : MonoBehaviour {
     public int numTargets;
     public AudioClip keySound;
 
-    private AudioSource audioSource;
     private PulseController pc;
     private List<TypeTarget> targets;
     private float targetOffset;
     private string[] wordList = { "beat", "blood", "flow", "flutter", "gush", "heart", "live", "pound", "pulse", "spout", "spurt", "surge", "throb", "thump"};
 
 	void Start () {
-        audioSource = GetComponent<AudioSource>();
         pc = GameObject.Find("PulseController").GetComponent<PulseController>();
         targetOffset = targetTemplate.GetComponent<TextMesh>().fontSize / 10;
         targets = new List<TypeTarget>(numTargets);

@@ -137,7 +137,10 @@ public class PulseController : MonoBehaviour {
     }
     public float GetBeatDistance(GameObject beat)
     {
-        return Mathf.Abs(beat.transform.localPosition.x - markPosition);
+        if (beat != null)
+            return Mathf.Abs(beat.transform.localPosition.x - markPosition);
+        else
+            return startOffset;
     }
     private void MakeBeat()
     {
@@ -188,7 +191,6 @@ AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position);
     {
         if (beat == null)
             return;
-        float distance = GetBeatDistance(beat);
         beats.Remove(beat);
         Destroy(beat);
     }
