@@ -9,6 +9,20 @@ public class MenuController : MonoBehaviour {
     public Texture menuPlaceholder;
     public Texture outlineWhaleSmall;
     public Texture outlineWhale;
+    public Texture outlineElephantSmall;
+    public Texture outlineElephant;
+    public Texture outlineHorseSmall;
+    public Texture outlineHorse;
+    public Texture outlineCowSmall;
+    public Texture outlineCow;
+    public Texture outlineHumanSmall;
+    public Texture outlineHuman;
+    public Texture outlineDogSmall;
+    public Texture outlineDog;
+    public Texture outlineCatSmall;
+    public Texture outlineCat;
+    public Texture outlineMouseSmall;
+    public Texture outlineMouse;
 
     private List<GameConfig> configs;
     private GameState gameState;
@@ -19,13 +33,13 @@ public class MenuController : MonoBehaviour {
 
         configs = new List<GameConfig>();
         configs.Add(new GameConfig("Whale", 20, outlineWhaleSmall, outlineWhale));
-        configs.Add(new GameConfig("Elephant", 30, menuPlaceholder, menuPlaceholder));
-        configs.Add(new GameConfig("Horse", 45, menuPlaceholder, menuPlaceholder));
-        configs.Add(new GameConfig("Cow", 60, menuPlaceholder, menuPlaceholder));
-        configs.Add(new GameConfig("Human", 70, menuPlaceholder, menuPlaceholder));
-        configs.Add(new GameConfig("Dog", 90, menuPlaceholder, menuPlaceholder));
-        configs.Add(new GameConfig("Cat", 110, menuPlaceholder, menuPlaceholder));
-        configs.Add(new GameConfig("Mouse", 450, menuPlaceholder, menuPlaceholder));
+        configs.Add(new GameConfig("Elephant", 30, outlineElephantSmall, outlineElephant));
+        configs.Add(new GameConfig("Horse", 45, outlineHorseSmall, outlineHorse));
+        configs.Add(new GameConfig("Cow", 60, outlineCowSmall, outlineCow));
+        configs.Add(new GameConfig("Human", 70, outlineHumanSmall, outlineHuman));
+        configs.Add(new GameConfig("Dog", 90, outlineDogSmall, outlineDog));
+        configs.Add(new GameConfig("Cat", 110, outlineCatSmall, outlineCat));
+        configs.Add(new GameConfig("Mouse", 450, outlineMouseSmall, outlineMouse));
 	}
 
     void OnGUI()
