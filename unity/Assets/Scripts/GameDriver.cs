@@ -9,27 +9,34 @@ public class GameDriver : MonoBehaviour {
     private float gameDuration = 60f;
     private float gameStart;
 
+    private GameObject bigPicture;
     private GameObject helpText;
-    private GameDriverState state;
+    private GameState gameState;
+    private GameDriverState driverState;
     private PulseController pc;
     private TypeMaster tm;
 
 	// Use this for initialization
 	void Start () {
+        bigPicture = GameObject.Find("BigPicture");
         helpText = GameObject.Find("HelpText");
-        state = GameDriverState.Start;
+        driverState = GameDriverState.Start;
         pc = GameObject.Find("PulseController").GetComponent<PulseController>();
         tm = GameObject.Find("TypeMaster").GetComponent<TypeMaster>();
+        gameState = GameObject.Find("GameState").GetComponent<GameState>();
+
+        if (gameState.gameConfig != null)
+            bigPicture.GetComponent<Renderer>().material.SetTexture("_MainTex", gameState.gameConfig.bigTexture);
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        switch(state)
+        switch(driverState)
         {
             case GameDriverState.Start:
                 if(Input.GetKeyDown(KeyCode.Space))
                 {
-                    state = GameDriverState.Run;
+                    driverState = GameDriverState.Run;
                     Destroy(helpText);
                     pc.isRunning = true;
                     tm.isRunning = true;
@@ -55,7 +62,7 @@ public class GameDriver : MonoBehaviour {
         if (skin)
             GUI.skin = skin;
         string labelText = null, buttonText = null;
-        switch (state)
+        switch (driverState)
         {
             case GameDriverState.Fail:
                 labelText = "Yooou Looose";
@@ -78,10 +85,10 @@ public class GameDriver : MonoBehaviour {
 
     public void GameOver()
     {
-        state = GameDriverState.Fail;
+        driverState = GameDriverState.Fail;
     }
     public void GameWon()
     {
-        state = GameDriverState.Success;
+        driverState = GameDriverState.Success;
     }
 }

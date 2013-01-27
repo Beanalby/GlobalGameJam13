@@ -7,6 +7,9 @@ public class MenuController : MonoBehaviour {
     public GUISkin skin;
 
     public Texture menuPlaceholder;
+    public Texture outlineWhaleSmall;
+    public Texture outlineWhale;
+
     private List<GameConfig> configs;
     private GameState gameState;
 
@@ -15,7 +18,7 @@ public class MenuController : MonoBehaviour {
         gameState = GameObject.Find("GameState").GetComponent<GameState>();
 
         configs = new List<GameConfig>();
-        configs.Add(new GameConfig("Whale", 20, menuPlaceholder, menuPlaceholder));
+        configs.Add(new GameConfig("Whale", 20, outlineWhaleSmall, outlineWhale));
         configs.Add(new GameConfig("Elephant", 30, menuPlaceholder, menuPlaceholder));
         configs.Add(new GameConfig("Horse", 45, menuPlaceholder, menuPlaceholder));
         configs.Add(new GameConfig("Cow", 60, menuPlaceholder, menuPlaceholder));
@@ -27,7 +30,7 @@ public class MenuController : MonoBehaviour {
 
     void OnGUI()
     {
-        int buttonSpace = 50;
+        int buttonSpace = 55;
         GUI.skin = skin;
 
         int x = (Screen.height - (configs.Count * buttonSpace))/2;

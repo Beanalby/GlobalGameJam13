@@ -12,6 +12,7 @@ public class GameConfig {
     {
         this.name = name;
         this.menuTexture = menuTexture;
+        this.bigTexture = bigTexture;
         this.rate = rate;
     }
 }
