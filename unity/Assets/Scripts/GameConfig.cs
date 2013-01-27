@@ -9,8 +9,9 @@ public class GameConfig {
     public Texture menuTexture, bigTexture;
     public Vector3 heartOffset;
     public float heartScale;
+    public AudioClip music;
 
-    public GameConfig(string name, int rate, Texture menuTexture, Texture bigTexture, Vector3 heartOffset, float heartScale)
+    public GameConfig(string name, int rate, Texture menuTexture, Texture bigTexture, Vector3 heartOffset, float heartScale, AudioClip music)
     {
         this.name = name;
         this.menuTexture = menuTexture;
@@ -18,5 +19,6 @@ public class GameConfig {
         this.rate = rate;
         this.heartOffset = heartOffset;
         this.heartScale = heartScale;
+        this.music = music;
     }
 }

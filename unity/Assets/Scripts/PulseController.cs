@@ -22,7 +22,7 @@ public class PulseController : MonoBehaviour {
 
     private List<GameObject> beats;
     private float lastBeat = -100f;
-    private float startOffset = 64f;
+    private float startOffset = 80f;
     private float missPosition = 6f;
     private float markPosition;
 
@@ -45,6 +45,9 @@ public class PulseController : MonoBehaviour {
             if (!_isRunning && value)
             {
                 lastBeat = Time.time;
+                AudioSource audio = GetComponent<AudioSource>();
+                audio.clip = gameState.gameConfig.music;
+                audio.Play();
             }
             _isRunning = value;
         }
@@ -99,6 +102,7 @@ public class PulseController : MonoBehaviour {
         if (health <= 0)
         {
             Debug.Log("Game Over.");
+            GetComponent<AudioSource>().Stop();
             gameDriver.GameOver();
             _isRunning = false;
             tm.isRunning = false;
