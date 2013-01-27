@@ -120,9 +120,6 @@ public class TypeMaster : MonoBehaviour {
     }
     public void PlaySound(InputResult result)
     {
-        Debug.Log("PLAYING!");
-        //audioSource.PlayOneShot(keySound);
-        //audioSource.Play();
         if(result != InputResult.Match)
             AudioSource.PlayClipAtPoint(keySound, Camera.main.transform.position);
     }

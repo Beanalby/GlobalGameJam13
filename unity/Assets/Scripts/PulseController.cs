@@ -5,10 +5,14 @@ using System.Collections.Generic;
 public class PulseController : MonoBehaviour {
 
     public GameObject beatTemplate;
+    public GameObject feedbackTemplate;
+
     public float beatDelay;
     public bool isRunning = true;
     public Color healthyColor = Color.green;
     public Color badColor = Color.red;
+    public float distanceGood = 5;
+    public float distanceFair = 10;
 
     public AudioClip beatSound;
     public AudioClip earlySound;
@@ -16,8 +20,6 @@ public class PulseController : MonoBehaviour {
     public AudioClip flatlineSound;
 
     private List<GameObject> beats;
-    private float distanceGood = 5;
-    private float distanceFair = 10;
     private float lastBeat = -100f;
     private float startOffset = 64f;
     private float missPosition = 6f;
@@ -39,7 +41,6 @@ public class PulseController : MonoBehaviour {
         markPosition = transform.Find("PulseMark").transform.localPosition.x;
         bgMat = transform.Find("PulseBackground").GetComponent<LineRenderer>().material;
         tm = GameObject.Find("TypeMaster").GetComponent<TypeMaster>();
-        Debug.Log("markPosition=" + markPosition);
 	}
 	
 	// Update is called once per frame
@@ -55,8 +56,12 @@ public class PulseController : MonoBehaviour {
     {
         float healthChange = GetHealthChange(beat);
         ApplyHealthChange(healthChange);
-        Debug.Log("Health changed by + " + healthChange + ", now it's " + health);
         PlaySound(beat, didType);
+        FeedbackController feedback = ((GameObject)Instantiate(feedbackTemplate)).GetComponent<FeedbackController>();
+        Vector3 pos = feedback.transform.position;
+        feedback.transform.parent = transform;
+        feedback.transform.localPosition = pos;
+        feedback.beatPos = beat.transform.localPosition.x;
         RemoveBeat(beat);
     }
     public void ApplyHealthChange(float delta)
@@ -71,7 +76,6 @@ public class PulseController : MonoBehaviour {
         }
         health = Mathf.Min(health, maxHealth);
         Color newColor = GetCurrentColor();
-        Debug.Log("Setting color on " + bgMat.name + " from " +  bgMat.GetColor("_EmisColor").grayscale + " to " + newColor);
         bgMat.SetColor("_EmisColor", newColor);
         foreach (GameObject beat in beats)
         {
@@ -98,7 +102,6 @@ public class PulseController : MonoBehaviour {
     {
         if (beat == null)
         {
-            Debug.Log("Wait for a beat!");
             return healthModBad;
         }
         float distance = GetBeatDistance(beat);
@@ -128,7 +131,11 @@ public class PulseController : MonoBehaviour {
         // find the nearest pulse, remove it, and see how good it was
         ApplyBeat(GetNearestBeat(), true);
     }
-    private float GetBeatDistance(GameObject beat)
+    public float GetBeatDistance(float posx)
+    {
+        return Mathf.Abs(posx - markPosition);
+    }
+    public float GetBeatDistance(GameObject beat)
     {
         return Mathf.Abs(beat.transform.localPosition.x - markPosition);
     }
@@ -156,7 +163,6 @@ public class PulseController : MonoBehaviour {
             beat.transform.localPosition = pos;
             if (pos.x <= missPosition)
             {
-                Debug.Log("Missed beat, deleting!");
                 beatToRemove = beat;
             }
         }
@@ -183,7 +189,6 @@ AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position);
         if (beat == null)
             return;
         float distance = GetBeatDistance(beat);
-        Debug.Log("Removing beat at distance " + distance);
         beats.Remove(beat);
         Destroy(beat);
     }
