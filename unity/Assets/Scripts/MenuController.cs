@@ -33,7 +33,7 @@ public class MenuController : MonoBehaviour {
         int x = (Screen.height - (configs.Count * buttonSpace))/2;
         foreach (GameConfig config in configs)
         {
-            string desc = config.name + " - " + config.rate + " beats (words) per minute";
+            string desc = config.name + " - " + config.rate + " beats per minute";
             if(GUI.Button(new Rect(Screen.width/4, x, Screen.width / 2, buttonSpace-5), new GUIContent(desc, config.menuTexture)))
                 LaunchConfig(config);
             x += buttonSpace;

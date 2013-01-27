@@ -9,6 +9,7 @@ public class PulseController : MonoBehaviour {
 
     public float beatDelay;
     private bool _isRunning = false;
+    private bool _makeNewBeats = true;
     public Color healthyColor = Color.green;
     public Color badColor = Color.red;
     public float distanceGood = 5;
@@ -26,6 +27,7 @@ public class PulseController : MonoBehaviour {
     private float markPosition;
 
     private GameState gameState;
+    private GameDriver gameDriver;
     private Material bgMat;
     private TypeMaster tm;
 
@@ -47,6 +49,11 @@ public class PulseController : MonoBehaviour {
             _isRunning = value;
         }
     }
+    public bool makeNewBeats
+    {
+        get { return _makeNewBeats; }
+        set { _makeNewBeats = value; }
+    }
 	// Use this for initialization
 	void Start () {
         health = maxHealth;
@@ -54,6 +61,7 @@ public class PulseController : MonoBehaviour {
         markPosition = transform.Find("PulseMark").transform.localPosition.x;
         bgMat = transform.Find("PulseBackground").GetComponent<LineRenderer>().material;
         gameState = GameObject.Find("GameState").GetComponent<GameState>();
+        gameDriver = GameObject.Find("GameDriver").GetComponent<GameDriver>();
         tm = GameObject.Find("TypeMaster").GetComponent<TypeMaster>();
 
         if (gameState.gameConfig != null)
@@ -91,6 +99,7 @@ public class PulseController : MonoBehaviour {
         if (health <= 0)
         {
             Debug.Log("Game Over.");
+            gameDriver.GameOver();
             _isRunning = false;
             tm.isRunning = false;
             AudioSource.PlayClipAtPoint(flatlineSound, Camera.main.transform.position);
@@ -163,10 +172,16 @@ public class PulseController : MonoBehaviour {
         else
             return startOffset;
     }
+    public bool HasBeats()
+    {
+        return beats.Count != 0;
+    }
     private void MakeBeat()
     {
         if (lastBeat + beatDelay < Time.time)
         {
+            if (!_makeNewBeats)
+                return;
             lastBeat = Time.time;
             GameObject newBeat = (GameObject)Instantiate(beatTemplate);
             Vector3 pos = newBeat.transform.position;
