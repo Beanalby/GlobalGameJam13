@@ -47,11 +47,21 @@ public class TypeTarget : MonoBehaviour {
         {
             if (currentPos != 0)
             {
-                currentPos = 0;
-                ret = InputResult.Reset;
+                // if we're on the first character and what they typed
+                // matches the first character, accept it.
+                if (currentPos == 1 && char.ToLower(text[0]) == char.ToLower(c))
+                {
+                    ret = InputResult.Match;
+                }
+                else
+                {
+                    currentPos = 0;
+                    ret = InputResult.Reset;
+                }
             }
             else
             {
+                // nothing on this and it didn't match
                 ret = InputResult.None;
             }
         }
@@ -71,8 +81,5 @@ public class TypeTarget : MonoBehaviour {
             newStr = "<color=\"#" + matchHex + "\">" + text.Substring(0, currentPos) + "</color>" +text.Substring(currentPos);
         }
         tm.text = newStr;
-    }
-    void OnGUI()
-    {
     }
 }

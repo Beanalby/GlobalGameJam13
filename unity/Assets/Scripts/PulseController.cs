@@ -10,6 +10,10 @@ public class PulseController : MonoBehaviour {
     public Color healthyColor = Color.green;
     public Color badColor = Color.red;
 
+    public AudioClip beatSound;
+    public AudioClip earlySound;
+    public AudioClip missSound;
+
     private List<GameObject> beats;
     private float distanceGood = 5;
     private float distanceFair = 10;
@@ -46,11 +50,12 @@ public class PulseController : MonoBehaviour {
         }
     }
 
-    public void ApplyBeat(GameObject beat)
+    public void ApplyBeat(GameObject beat, bool didType)
     {
         float healthChange = GetHealthChange(beat);
         ApplyHealthChange(healthChange);
         Debug.Log("Health changed by + " + healthChange + ", now it's " + health);
+        PlaySound(beat, didType);
         RemoveBeat(beat);
     }
     public void ApplyHealthChange(float delta)
@@ -119,7 +124,7 @@ public class PulseController : MonoBehaviour {
     public void DidWord()
     {
         // find the nearest pulse, remove it, and see how good it was
-        ApplyBeat(GetNearestBeat());
+        ApplyBeat(GetNearestBeat(), true);
     }
     private float GetBeatDistance(GameObject beat)
     {
@@ -155,8 +160,21 @@ public class PulseController : MonoBehaviour {
         }
         if (beatToRemove != null)
         {
-            ApplyBeat(beatToRemove);
+            ApplyBeat(beatToRemove, false);
         }
+    }
+    private void PlaySound(GameObject beat, bool didType)
+    {
+        AudioClip clip;
+        if (!didType)
+            clip = missSound;
+        else
+            if (GetBeatDistance(beat) > distanceFair)
+                clip = earlySound;
+            else
+                clip = beatSound;
+
+AudioSource.PlayClipAtPoint(clip, Camera.main.transform.position);
     }
     private void RemoveBeat(GameObject beat)
     {

@@ -1,18 +1,22 @@
 using UnityEngine;
 using System.Collections.Generic;
 
+[RequireComponent(typeof(AudioSource))]
 public class TypeMaster : MonoBehaviour {
 
     public GameObject targetTemplate;
     public bool isRunning = true;
     public int numTargets;
+    public AudioClip keySound;
 
+    private AudioSource audioSource;
     private PulseController pc;
     private List<TypeTarget> targets;
     private float targetOffset;
     private string[] wordList = { "beat", "blood", "flow", "flutter", "gush", "heart", "live", "pound", "pulse", "spout", "spurt", "surge", "throb", "thump"};
 
 	void Start () {
+        audioSource = GetComponent<AudioSource>();
         pc = GameObject.Find("PulseController").GetComponent<PulseController>();
         targetOffset = targetTemplate.GetComponent<TextMesh>().fontSize / 10;
         targets = new List<TypeTarget>(numTargets);
@@ -80,7 +84,7 @@ public class TypeMaster : MonoBehaviour {
         }
         if (input != "")
         {
-            // TODO make sound
+            PlaySound(result);
         }
 	}
 
@@ -113,5 +117,13 @@ public class TypeMaster : MonoBehaviour {
                 new Vector3(pos.x + targetOffset * 2, pos.y, pos.z));
             pos.y -= targetOffset;
         }
+    }
+    public void PlaySound(InputResult result)
+    {
+        Debug.Log("PLAYING!");
+        //audioSource.PlayOneShot(keySound);
+        //audioSource.Play();
+        if(result != InputResult.Match)
+            AudioSource.PlayClipAtPoint(keySound, Camera.main.transform.position);
     }
 }
