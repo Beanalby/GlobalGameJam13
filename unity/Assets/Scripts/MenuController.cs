@@ -32,14 +32,14 @@ public class MenuController : MonoBehaviour {
         gameState = GameObject.Find("GameState").GetComponent<GameState>();
 
         configs = new List<GameConfig>();
-        configs.Add(new GameConfig("Whale", 20, outlineWhaleSmall, outlineWhale));
-        configs.Add(new GameConfig("Elephant", 30, outlineElephantSmall, outlineElephant));
-        configs.Add(new GameConfig("Horse", 45, outlineHorseSmall, outlineHorse));
-        configs.Add(new GameConfig("Cow", 60, outlineCowSmall, outlineCow));
-        configs.Add(new GameConfig("Human", 70, outlineHumanSmall, outlineHuman));
-        configs.Add(new GameConfig("Dog", 90, outlineDogSmall, outlineDog));
-        configs.Add(new GameConfig("Cat", 110, outlineCatSmall, outlineCat));
-        configs.Add(new GameConfig("Mouse", 450, outlineMouseSmall, outlineMouse));
+        configs.Add(new GameConfig("Whale", 20, outlineWhaleSmall, outlineWhale, new Vector3(-1.5f, -1.4f, -.5f), .2f));
+        configs.Add(new GameConfig("Elephant", 30, outlineElephantSmall, outlineElephant, new Vector3(-.3f, 1.4f, -.5f), .15f));
+        configs.Add(new GameConfig("Horse", 45, outlineHorseSmall, outlineHorse, new Vector3(-.6f, 1.1f, -.5f), .15f));
+        configs.Add(new GameConfig("Cow", 60, outlineCowSmall, outlineCow, new Vector3(-.3f, .7f, -.5f), .15f));
+        configs.Add(new GameConfig("Human", 70, outlineHumanSmall, outlineHuman, new Vector3(.2f, 2.3f, -.5f), .1f));
+        configs.Add(new GameConfig("Dog", 90, outlineDogSmall, outlineDog, new Vector3(-1.2f, .4f, -.5f), .15f));
+        configs.Add(new GameConfig("Cat", 110, outlineCatSmall, outlineCat, new Vector3(-.4f, .6f, -.5f), .2f));
+        configs.Add(new GameConfig("Mouse", 450, outlineMouseSmall, outlineMouse, new Vector3(1.4f, .3f, -.5f), .15f));
 	}
 
     void OnGUI()

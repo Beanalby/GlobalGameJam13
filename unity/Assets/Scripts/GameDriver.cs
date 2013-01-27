@@ -26,7 +26,13 @@ public class GameDriver : MonoBehaviour {
         gameState = GameObject.Find("GameState").GetComponent<GameState>();
 
         if (gameState.gameConfig != null)
+        {
             bigPicture.GetComponent<Renderer>().material.SetTexture("_MainTex", gameState.gameConfig.bigTexture);
+            GameObject heart = bigPicture.transform.Find("Heart").gameObject;
+            heart.transform.localPosition = gameState.gameConfig.heartOffset;
+            float n = gameState.gameConfig.heartScale;
+            heart.transform.localScale = new Vector3(n, n, n);
+        }
 	}
 	
 	// Update is called once per frame
