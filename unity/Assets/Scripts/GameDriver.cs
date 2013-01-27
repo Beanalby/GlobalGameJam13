@@ -6,7 +6,7 @@ public class GameDriver : MonoBehaviour {
 
     public GUISkin skin;
 
-    private float gameDuration = 60f;
+    private float gameDuration = 30f;
     private float gameStart;
 
     private GameObject bigPicture;

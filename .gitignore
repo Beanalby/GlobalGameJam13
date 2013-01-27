@@ -3,3 +3,4 @@ unity/*
 !unity/ProjectSettings/
 !.gitignore
 
+buildWin
