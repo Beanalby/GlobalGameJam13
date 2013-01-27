@@ -13,6 +13,7 @@ public class PulseController : MonoBehaviour {
     public AudioClip beatSound;
     public AudioClip earlySound;
     public AudioClip missSound;
+    public AudioClip flatlineSound;
 
     private List<GameObject> beats;
     private float distanceGood = 5;
@@ -66,6 +67,7 @@ public class PulseController : MonoBehaviour {
             Debug.Log("Game Over.");
             isRunning = false;
             tm.isRunning = false;
+            AudioSource.PlayClipAtPoint(flatlineSound, Camera.main.transform.position);
         }
         health = Mathf.Min(health, maxHealth);
         Color newColor = GetCurrentColor();
