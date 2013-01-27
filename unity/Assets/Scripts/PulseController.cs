@@ -26,6 +26,8 @@ public class PulseController : MonoBehaviour {
     private float missPosition = 6f;
     private float markPosition;
 
+    private GameObject heart;
+    private Vector3 heartStartPos=Vector3.zero;
     private GameState gameState;
     private GameDriver gameDriver;
     private Material bgMat;
@@ -46,8 +48,11 @@ public class PulseController : MonoBehaviour {
             {
                 lastBeat = Time.time;
                 AudioSource audio = GetComponent<AudioSource>();
-                audio.clip = gameState.gameConfig.music;
-                audio.Play();
+                if (gameState.gameConfig != null)
+                {
+                    audio.clip = gameState.gameConfig.music;
+                    audio.Play();
+                }
             }
             _isRunning = value;
         }
@@ -66,7 +71,7 @@ public class PulseController : MonoBehaviour {
         gameState = GameObject.Find("GameState").GetComponent<GameState>();
         gameDriver = GameObject.Find("GameDriver").GetComponent<GameDriver>();
         tm = GameObject.Find("TypeMaster").GetComponent<TypeMaster>();
-
+        heart = GameObject.Find("Heart");
         if (gameState.gameConfig != null)
             beatDelay = 60f / gameState.gameConfig.rate;
 	}
@@ -212,6 +217,25 @@ public class PulseController : MonoBehaviour {
         if (beatToRemove != null)
         {
             ApplyBeat(beatToRemove, false);
+        }
+        if (heart)
+        {
+            if(heartStartPos == Vector3.zero)
+                heartStartPos = heart.transform.position;
+            if (!_makeNewBeats)
+            {
+                heart.transform.position = heartStartPos;
+            }
+            else
+            {
+                float offset = (Time.time - lastBeat) / beatDelay;
+                Vector3 pos = heartStartPos;
+                if (offset > .5f)
+                    pos.y = Mathf.Lerp(heartStartPos.y+2f, heartStartPos.y, 2f*(offset-.5f));
+                else
+                    pos.y = Mathf.Lerp(heartStartPos.y, heartStartPos.y+2f, (2f*offset));
+                heart.transform.position = pos;
+            }
         }
     }
     private void PlaySound(GameObject beat, bool didType)
