@@ -8,7 +8,7 @@ public class PulseController : MonoBehaviour {
     public GameObject feedbackTemplate;
 
     public float beatDelay;
-    public bool isRunning = true;
+    private bool _isRunning = false;
     public Color healthyColor = Color.green;
     public Color badColor = Color.red;
     public float distanceGood = 5;
@@ -35,6 +35,18 @@ public class PulseController : MonoBehaviour {
     private float healthModFair = .5f;
     private float healthModBad = -10f;
 
+    public bool isRunning
+    {
+        get { return _isRunning; }
+        set
+        {
+            if (!_isRunning && value)
+            {
+                lastBeat = Time.time;
+            }
+            _isRunning = value;
+        }
+    }
 	// Use this for initialization
 	void Start () {
         health = maxHealth;
@@ -45,15 +57,12 @@ public class PulseController : MonoBehaviour {
         tm = GameObject.Find("TypeMaster").GetComponent<TypeMaster>();
 
         if (gameState.gameConfig != null)
-        {
             beatDelay = 60f / gameState.gameConfig.rate;
-            Debug.Log("rate " + gameState.gameConfig.rate + " sbet beatDelay to " + beatDelay);
-        }
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        if (isRunning)
+        if (_isRunning)
         {
             MakeBeat();
             MoveBeats();
@@ -82,7 +91,7 @@ public class PulseController : MonoBehaviour {
         if (health <= 0)
         {
             Debug.Log("Game Over.");
-            isRunning = false;
+            _isRunning = false;
             tm.isRunning = false;
             AudioSource.PlayClipAtPoint(flatlineSound, Camera.main.transform.position);
         }

@@ -4,29 +4,40 @@ using System.Collections.Generic;
 public class TypeMaster : MonoBehaviour {
 
     public GameObject targetTemplate;
-    public bool isRunning = true;
+    private bool _isRunning = false;
     public int numTargets;
     public AudioClip keySound;
 
     private PulseController pc;
     private List<TypeTarget> targets;
     private float targetOffset;
+    private string[] startList = { "type", "these", "words" };
     private string[] wordList = { "beat", "blood", "flow", "flutter", "gush", "heart", "live", "pound", "pulse", "spout", "spurt", "surge", "throb", "thump"};
 
+    public bool isRunning
+    {
+        get { return _isRunning; }
+        set
+        {
+            if (!_isRunning && value)
+            {
+                InitWords();
+            }
+            _isRunning = value;
+        }
+    }
 	void Start () {
         pc = GameObject.Find("PulseController").GetComponent<PulseController>();
         targetOffset = targetTemplate.GetComponent<TextMesh>().fontSize / 10;
-        targets = new List<TypeTarget>(numTargets);
-        for (int i = 0; i < numTargets; i++)
-        {
-            targets.Add(CreateTarget(i));
-        }
+        targets = new List<TypeTarget>();
+        for(int i=0;i<startList.Length;i++)
+            targets.Add(CreateTarget(i, startList[i]));
 	}
 
     // Update is called once per frame
     void Update()
     {
-        if (isRunning)
+        if (_isRunning)
         {
             HandleInput(Input.inputString);
             HandleFinished();
@@ -46,13 +57,17 @@ public class TypeMaster : MonoBehaviour {
             }
         }
     }
-    private TypeTarget CreateTarget(int index)
+
+    private TypeTarget CreateTarget(int index, string forceWord=null)
     {
         TypeTarget tt = ((GameObject)Instantiate(targetTemplate)).GetComponent<TypeTarget>();
         tt.index = index;
         tt.transform.parent = transform;
         tt.transform.localPosition = new Vector3(0, -(index * targetOffset), 0);
-        tt.text = GetNewText();
+        if (forceWord != null)
+            tt.text = forceWord;
+        else
+            tt.text = GetNewText();
         return tt;
     }
     private void HandleInput(string input)
@@ -84,7 +99,20 @@ public class TypeMaster : MonoBehaviour {
             PlaySound(result);
         }
 	}
+    private void InitWords()
+    {
+        if (targets != null)
+        {
+            foreach(TypeTarget target in targets)
+                Destroy(target.gameObject);
+            targets.Clear();
+        }
+        else
+            targets = new List<TypeTarget>();
 
+        for (int i = 0; i < numTargets; i++)
+            targets.Add(CreateTarget(i));
+    }
     public bool IsTextUsed(string text)
     {
         foreach(TypeTarget target in targets)
