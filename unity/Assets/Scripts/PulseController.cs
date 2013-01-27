@@ -25,6 +25,7 @@ public class PulseController : MonoBehaviour {
     private float missPosition = 6f;
     private float markPosition;
 
+    private GameState gameState;
     private Material bgMat;
     private TypeMaster tm;
 
@@ -40,7 +41,14 @@ public class PulseController : MonoBehaviour {
         beats = new List<GameObject>();
         markPosition = transform.Find("PulseMark").transform.localPosition.x;
         bgMat = transform.Find("PulseBackground").GetComponent<LineRenderer>().material;
+        gameState = GameObject.Find("GameState").GetComponent<GameState>();
         tm = GameObject.Find("TypeMaster").GetComponent<TypeMaster>();
+
+        if (gameState.gameConfig != null)
+        {
+            beatDelay = 60f / gameState.gameConfig.rate;
+            Debug.Log("rate " + gameState.gameConfig.rate + " sbet beatDelay to " + beatDelay);
+        }
 	}
 	
 	// Update is called once per frame
@@ -61,7 +69,11 @@ public class PulseController : MonoBehaviour {
         Vector3 pos = feedback.transform.position;
         feedback.transform.parent = transform;
         feedback.transform.localPosition = pos;
-        feedback.beatPos = beat.transform.localPosition.x;
+        if (beat != null)
+            feedback.beatPos = beat.transform.localPosition.x;
+        else
+            feedback.beatPos = startOffset;
+
         RemoveBeat(beat);
     }
     public void ApplyHealthChange(float delta)
